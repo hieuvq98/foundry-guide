@@ -128,7 +128,7 @@ forge script script/MyToken.s.sol:MyTokenScript --rpc-url viction_mainnet --lega
 ```
 
 ***Note:*** 
-- Deployment require flag `--legacy` because the Viction RPC currently not supported EIP-1559 transactions. <a href="https://book.getfoundry.sh/forge/deploying">Reference.</a>
+- Deployment requires flag `--legacy` because the Viction RPC currently not supported EIP-1559 transactions. <a href="https://book.getfoundry.sh/forge/deploying">Reference.</a>
 
 The transaction informations will appear after running script likes this:
 ```
