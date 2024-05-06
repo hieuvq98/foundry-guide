@@ -61,12 +61,12 @@ Substitute <YOUR_PRIVATE_KEY> with the private key for your wallet.
 In a Foundry project, contracts will be placed at the `src/` folder. Create a simple token contract `MyToken.sol` for example:
 
 ```solidity
-pragma solidity 0.8.19;
+pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract MyToken is ERC20 {
-    constructor() ERC20("My Token", "MYT") {}
+    constructor(string memory name, string memory symbol) ERC20(name, symbol) {}
 
     function mint(address recipient, uint256 amount)
         external
@@ -106,7 +106,7 @@ Once your contract has been successfully compiled, you can deploy the contract t
 To deploy the contract to the Viction mainnet, you'll need to add the `script/MyToken.s.sol` in the project:
 ```solidity
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity 0.8.20;
 
 import {Script} from "forge-std/Script.sol";
 import "../src/MyToken.sol";
@@ -114,9 +114,9 @@ import "../src/MyToken.sol";
 contract MyTokenScript is Script {
     function run() public {
         uint256 privateKey = vm.envUint("PRIVATE_KEY");
-        
+
         vm.startBroadcast(privateKey);
-        new MyToken();
+        new MyToken("My Token", "MYT");
         vm.stopBroadcast();
     }
 }
@@ -152,7 +152,7 @@ Waiting for receipts.
 ⠉ [00:00:07] [#############################################################################################################] 1/1 receipts (0.0s)
 ##### viction
 ✅  [Success]Hash: 0x3e2ff561e92a99e35cbd72ec707ae7642d2a87ef9c3213afbfc9544f37ee8b8f
-Contract Address: 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+Contract Address: 0xC9a8D9CEa9bF2450ED8082d73e8DaFC47989558E
 Block: 78881479
 Paid: 0.001041822 ETH (520911 gas * 2 gwei)
 
@@ -164,4 +164,32 @@ ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
 Total Paid: 0.001041822 ETH (520911 gas * avg 2 gwei)
 ```
 
-We got the success deployment with `txnHash` is `0x3e2ff561e92a99e35cbd72ec707ae7642d2a87ef9c3213afbfc9544f37ee8b8f` and the `MyToken` contract address is `0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0`. We can check its on <a href="https://scan-ui-testnet.viction.xyz/">VicScan</a>.
+We got the success deployment with `txnHash` is `0x3e2ff561e92a99e35cbd72ec707ae7642d2a87ef9c3213afbfc9544f37ee8b8f` and the `MyToken` contract address is `0xC9a8D9CEa9bF2450ED8082d73e8DaFC47989558E`. We can check its on <a href="https://scan-ui-testnet.viction.xyz/">VicScan</a>.
+
+## Verify contract on VicScan
+The first, we need to create a `json` file that contains arguments of contructor when deploy contract. File path: `./script/arguments.json`:
+```json
+["My Token", "MYT"]
+```
+
+Run below commands to verify contract on VicScan:
+- For mainnet: 
+```shell
+forge verify-contract 0xC9a8D9CEa9bF2450ED8082d73e8DaFC47989558E MyToken --etherscan-api-key none --verifier-url https://vicscan.xyz/api/contract/foundry/verify --constructor-args-path ./script/arguments.json
+```
+
+- For testnet: 
+```shell
+forge verify-contract 0xC9a8D9CEa9bF2450ED8082d73e8DaFC47989558E MyToken --etherscan-api-key none --verifier-url https://testnet.vicscan.xyz/api/contract/foundry/verify --constructor-args-path ./script/arguments.json
+```
+
+The successful verification will show:
+```shell
+Start verifying contract `0xC9a8D9CEa9bF2450ED8082d73e8DaFC47989558E` deployed on mainnet
+
+Submitting verification for [src/MyToken.sol:MyToken] 0xC9a8D9CEa9bF2450ED8082d73e8DaFC47989558E.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `Pass - Verified`
+        URL: https://viscan.io/address/0xc9a8d9cea9bf2450ed8082d73e8dafc47989558e
+```

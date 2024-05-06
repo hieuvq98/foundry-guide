@@ -9,7 +9,7 @@ contract MyTokenScript is Script {
         uint256 privateKey = vm.envUint("PRIVATE_KEY");
 
         vm.startBroadcast(privateKey);
-        new MyToken();
+        new MyToken("My Token", "MYT");
         vm.stopBroadcast();
     }
 }

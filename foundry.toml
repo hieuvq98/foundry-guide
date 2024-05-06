@@ -10,7 +10,7 @@ remappings=[
 ]
 
 [rpc_endpoints]
-viction_mainnet = "https://rpc-stg.viction-mainnet.tforce.dev/"
+viction_mainnet = "https://rpc.viction.xyz"
 viction_local = "http://localhost:8545/"
 
 [etherscan]
